@@ -13,9 +13,9 @@ export default function useRouteElement() {
     {
       path: '/login', // login sử dụng registerLayout
       element: (
-        <RegisterLayout>
-          <Login />
-        </RegisterLayout>
+        // <RegisterLayout>
+        <Login />
+        // </RegisterLayout>
       )
     },
     {
