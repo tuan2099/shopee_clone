@@ -1,9 +1,10 @@
 // quản lý form
-import type { RegisterOptions } from 'react-hook-form/dist/types'
+import { type } from 'os'
+import type { RegisterOptions, UseFormGetValues } from 'react-hook-form/dist/types'
 
 type Rules = { [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions }
 
-export const rules: Rules = {
+export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
       value: true,
@@ -48,6 +49,11 @@ export const rules: Rules = {
     minLength: {
       value: 5,
       message: 'Tối thiểu 5 kí tự'
-    }
+    },
+    // so sánh value
+    validate:
+      typeof getValues === 'function'
+        ? (value) => value === getValues('password') || 'Nhập lại pass không khớp '
+        : undefined
   }
-}
+})
