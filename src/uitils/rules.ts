@@ -1,5 +1,7 @@
 // quản lý form
 import { type } from 'os'
+// import { yupResolver } from '@hookform/resolvers'
+import * as yup from 'yup'
 import type { RegisterOptions, UseFormGetValues } from 'react-hook-form/dist/types'
 
 type Rules = { [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions }
@@ -57,3 +59,22 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
         : undefined
   }
 })
+
+// Yup
+export const schema = yup.object({
+  email: yup
+    .string()
+    .required('Email là bắt buộc')
+    .email('Email không hợp lệ')
+    .min(5, 'Tối thiểu 5 kí tự')
+    .max(160, 'Tối đa 160 kí tự'),
+  password: yup.string().required('Password là bắt buộc').min(5, 'Tối thiểu 5 kí tự').max(160, 'Tối đa 160 kí tự'),
+  confirm_password: yup
+    .string()
+    .required('Vui lòng nhập lại password là bắt buộc')
+    .min(5, 'Tối thiểu 5 kí tự')
+    .max(160, 'Tối đa 160 kí tự')
+    .oneOf([yup.ref('password')], 'Nhập lại password không khớp')
+})
+
+export type Schema = yup.InferType<typeof schema> // kế thừa schema -> ko cần khái báo interface

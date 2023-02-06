@@ -1,36 +1,56 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
-import { getRules } from 'src/uitils/rules'
-
-interface FormData {
-  email: string
-  password: string
-  confirm_password: string
-}
+import { Schema, schema } from 'src/uitils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
+import { registerAccount } from 'src/apis/auth.api'
+import { omit } from 'lodash'
+import { isAxiosError, isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
+import { SuccessResponse } from 'src/type/utils.type'
+type FormData = Schema
 
 function Register() {
   const {
     register,
     handleSubmit,
     watch, // làm cho form rerender --> lẫy value để so sánh confirm - cách 1
-    getValues, // ko làm cho component rerender
+    setError, // get lỗi
     formState: { errors } // là 1 obj
-  } = useForm<FormData>()
-  console.log('errors', errors)
-
-  const rules = getRules(getValues)
-
+  } = useForm<FormData>({
+    resolver: yupResolver(schema) // dùng yup
+  })
+  // react query call api register
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+  })
   // submit form
-  const onSubmit = handleSubmit(
-    (data) => {
-      // console.log(data)
-    },
-    (data) => {
-      const password = getValues('password') // lấy pass để so sánh
-    }
-  )
+  const onSubmit = handleSubmit((data) => {
+    const body = omit(data, ['confirm_password']) // bỏ đi thuộc tính confirm password
+    // thực hiện call data
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<SuccessResponse<Omit<FormData, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data
+          if (formError?.email) {
+            setError('email', {
+              message: formError.email,
+              type: 'Server'
+            })
+          }
+          if (formError?.password) {
+            setError('password', {
+              message: formError.password,
+              type: 'Server'
+            })
+          }
+        }
+      }
+    })
+  })
   return (
     <>
       <div className='bg-orange'>
@@ -45,7 +65,6 @@ function Register() {
                   type='email'
                   className='mt-8'
                   register={register}
-                  rules={rules.email}
                   errorsMesage={errors.email?.message}
                 />
                 <Input
@@ -54,7 +73,6 @@ function Register() {
                   type='password'
                   className='mt-2'
                   register={register}
-                  rules={rules.password}
                   errorsMesage={errors.password?.message}
                 />
                 <Input
@@ -63,14 +81,13 @@ function Register() {
                   type='password'
                   className='mt-2'
                   register={register}
-                  rules={rules.confirm_password}
                   errorsMesage={errors.confirm_password?.message}
                 />
                 {/* <input
                   type='email'
                   className='mt-8 w-full rounded-sm border border-gray-300 p-3 focus:border-gray-500 focus:shadow-sm'
                   placeholder='Email'
-                  {...register('email', rules.email)} // dữ liệu reac-hook-form
+                  {...register('email', rules.email)} // dữ liệu react-hook-form
                 />
                 <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 '>{errors.email?.message}</div> */}
                 <div className='mt-3'>
