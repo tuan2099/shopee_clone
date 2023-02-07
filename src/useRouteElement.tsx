@@ -1,34 +1,69 @@
-import { useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import RegisterLayout from './layout/registerLayout'
 import Login from './pages/Login'
 import ProductList from './pages/Productlist/Productlist'
 import Register from './pages/Register'
 import MainLayout from './layout/Mainlayout'
+import Profile from './pages/Profile'
+
+// xử lý đăng nhập vào mới đưuọc làm ....
+function ProtectedRoute() {
+  const isAuthenticate = true
+  return isAuthenticate ? <Outlet /> : <Navigate to='/login' />
+}
+// login rồi thì ko cần vào trang login nữa
+function RejectedRoute() {
+  const isAuthenticate = false
+  return isAuthenticate ? <Outlet /> : <Navigate to='/' />
+}
 export default function useRouteElement() {
   const routeElement = useRoutes([
     {
       path: '/',
+      index: true,
       element: (
         <MainLayout>
           <ProductList />
         </MainLayout>
       )
     },
+    // sau login
     {
-      path: '/login', // login sử dụng registerLayout
-      element: (
-        <RegisterLayout>
-          <Login />
-        </RegisterLayout>
-      )
+      path: '',
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: '/profile',
+          element: (
+            <MainLayout>
+              <Profile />
+            </MainLayout>
+          )
+        }
+      ]
     },
+    // chưa login
     {
-      path: '/register', // register sử dụng registerLayout
-      element: (
-        <RegisterLayout>
-          <Register />
-        </RegisterLayout>
-      )
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: '/login', // login sử dụng registerLayout
+          element: (
+            <RegisterLayout>
+              <Login />
+            </RegisterLayout>
+          )
+        },
+        {
+          path: '/register', // register sử dụng registerLayout
+          element: (
+            <RegisterLayout>
+              <Register />
+            </RegisterLayout>
+          )
+        }
+      ]
     }
   ])
   return routeElement
