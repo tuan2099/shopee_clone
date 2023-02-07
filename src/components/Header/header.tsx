@@ -73,7 +73,7 @@ function Header() {
                     >
                       <span
                         ref={arrowRef}
-                        className='absolute z-10 -translate-y-[-99%] border-[11px] border-x-transparent border-t-transparent border-b-white'
+                        className='absolute z-10 translate-y-[-99%] border-[11px] border-x-transparent border-t-transparent border-b-white'
                         style={{ top: middlewareData.arrow?.y, left: middlewareData.arrow?.x }} // arrow
                       ></span>
                       <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
