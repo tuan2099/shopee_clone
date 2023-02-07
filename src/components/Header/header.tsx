@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 function Header() {
   // dùng floating ui sử lý đóng mở hover
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const arrowRef = useRef<HTMLElement>(null)
   const { x, y, reference, floating, strategy, middlewareData } = useFloating({
     middleware: [offset(6), shift(), arrow({ element: arrowRef })] // mũi tên popover
