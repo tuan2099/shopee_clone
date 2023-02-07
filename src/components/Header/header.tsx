@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function Header() {
   return (
     <>
-      <div className='bg-[linear-gradient(-180deg, #f53d2d, #f63)] pb-5 pt-2 text-white'>
+      <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
         <div className='mx-auto max-w-[1200px] px-6'>
           <div className='flex justify-end'>
             <div className='flex cursor-pointer items-center py-1 hover:text-gray-300'>
@@ -53,7 +53,7 @@ function Header() {
                 </g>
               </svg>
             </Link>
-            <form className='col-sapn-9'>
+            <form className='col-span-9'>
               <div className='flex rounded-sm bg-white p-1'>
                 <input
                   type='text'
