@@ -1,4 +1,4 @@
-import { useFloating, FloatingPortal, arrow, shift, offset } from '@floating-ui/react-dom-interactions'
+import { useFloating, FloatingPortal, arrow, shift, offset, Placement } from '@floating-ui/react-dom-interactions'
 import React, { useRef, useState, useId } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -6,13 +6,15 @@ interface Props {
   children: React.ReactNode
   renderPopover: React.ReactNode
   classname: string
+  placement?: Placement
 }
-function Popover({ children, renderPopover, classname }: Props) {
+function Popover({ children, renderPopover, classname, placement }: Props) {
   // dùng floating ui sử lý đóng mở hover
   const [open, setOpen] = useState(false)
   const arrowRef = useRef<HTMLElement>(null)
   const { x, y, reference, floating, strategy, middlewareData } = useFloating({
-    middleware: [offset(6), shift(), arrow({ element: arrowRef })] // mũi tên popover
+    middleware: [offset(6), shift(), arrow({ element: arrowRef })],
+    placement: placement // mũi tên popover
   })
   const id = useId()
 

@@ -1,7 +1,4 @@
-import { useFloating, FloatingPortal, arrow, shift, offset } from '@floating-ui/react-dom-interactions'
-import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import Popover from '../Popover'
 
 function Header() {
@@ -10,6 +7,7 @@ function Header() {
       <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
         <div className='mx-auto max-w-[1200px] px-6'>
           <div className='flex justify-end'>
+            {/* language Popover */}
             <Popover
               classname='flex cursor-pointer items-center py-1 hover:text-gray-300'
               renderPopover={
@@ -47,6 +45,8 @@ function Header() {
                 <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
               </svg>
             </Popover>
+            {/* language Popover */}
+            {/* user Popover */}
             <Popover
               classname='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
               renderPopover={
@@ -72,8 +72,10 @@ function Header() {
               </div>
               <div>Hoàng Anh Tuấn</div>
             </Popover>
+            {/* user Popover */}
           </div>
           <div className='mt-4 grid grid-cols-12 items-end gap-4'>
+            {/* Logo */}
             <Link to='/' className='col-span-2'>
               <svg viewBox='0 0 192 65' className='h-8 fill-white lg:h-11'>
                 <g fillRule='evenodd'>
@@ -81,6 +83,8 @@ function Header() {
                 </g>
               </svg>
             </Link>
+            {/* Logo */}
+            {/* search all page */}
             <form className='col-span-9'>
               <div className='flex rounded-sm bg-white p-1'>
                 <input
@@ -107,7 +111,17 @@ function Header() {
                 </button>
               </div>
             </form>
-            <div className='cols-span-1'>
+            {/* search all page */}
+            {/* Cart */}
+            <Popover
+              classname='cols-span-1'
+              placement='bottom-end'
+              renderPopover={
+                <>
+                  <div>cart</div>
+                </>
+              }
+            >
               <Link to='/'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -124,7 +138,8 @@ function Header() {
                   />
                 </svg>
               </Link>
-            </div>
+            </Popover>
+            {/* Cart */}
           </div>
         </div>
       </div>
