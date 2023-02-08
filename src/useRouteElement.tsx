@@ -16,11 +16,34 @@ function ProtectedRoute() {
 // login rồi thì ko cần vào trang login nữa
 function RejectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
-  return isAuthenticated ? <Outlet /> : <Navigate to='/' />
+  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
 }
 
 export default function useRouteElement() {
   const routeElement = useRoutes([
+    // chưa login
+    {
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: '/login', // login sử dụng registerLayout
+          element: (
+            <RegisterLayout>
+              <Login />
+            </RegisterLayout>
+          )
+        },
+        {
+          path: '/register', // register sử dụng registerLayout
+          element: (
+            <RegisterLayout>
+              <Register />
+            </RegisterLayout>
+          )
+        }
+      ]
+    },
     {
       path: '/',
       index: true,
@@ -41,29 +64,6 @@ export default function useRouteElement() {
             <MainLayout>
               <Profile />
             </MainLayout>
-          )
-        }
-      ]
-    },
-    // chưa login
-    {
-      path: '',
-      element: <RejectedRoute />,
-      children: [
-        {
-          path: '/login', // login sử dụng registerLayout
-          element: (
-            <RegisterLayout>
-              <Login />
-            </RegisterLayout>
-          )
-        },
-        {
-          path: '/register', // register sử dụng registerLayout
-          element: (
-            <RegisterLayout>
-              <Register />
-            </RegisterLayout>
           )
         }
       ]
