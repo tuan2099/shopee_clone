@@ -5,17 +5,20 @@ import ProductList from './pages/Productlist/Productlist'
 import Register from './pages/Register'
 import MainLayout from './layout/Mainlayout'
 import Profile from './pages/Profile'
+import { useContext } from 'react'
+import { AppContext } from './contexts/app.context'
 
 // xử lý đăng nhập vào mới đưuọc làm ....
 function ProtectedRoute() {
-  const isAuthenticate = true
-  return isAuthenticate ? <Outlet /> : <Navigate to='/login' />
+  const { isAuthenticated } = useContext(AppContext)
+  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
 }
 // login rồi thì ko cần vào trang login nữa
 function RejectedRoute() {
-  const isAuthenticate = false
-  return isAuthenticate ? <Outlet /> : <Navigate to='/' />
+  const { isAuthenticated } = useContext(AppContext)
+  return isAuthenticated ? <Outlet /> : <Navigate to='/' />
 }
+
 export default function useRouteElement() {
   const routeElement = useRoutes([
     {

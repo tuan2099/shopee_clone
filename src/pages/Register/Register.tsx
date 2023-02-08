@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import Input from 'src/components/Input'
 import { Schema, schema } from 'src/uitils/rules'
@@ -7,14 +7,19 @@ import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { isAxiosError, isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
-import { SuccessResponse } from 'src/type/utils.type'
+import { ErrorResponse } from 'src/type/utils.type'
+import Button from 'src/components/Button'
+import { AppContext } from 'src/contexts/app.context'
+import { useNavigate } from 'react-router-dom'
 type FormData = Schema
 
 function Register() {
+  const { setIsAuthenticate, setProfile } = useContext(AppContext) // lấy ra từ context api
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
-    watch, // làm cho form rerender --> lẫy value để so sánh confirm - cách 1
     setError, // get lỗi
     formState: { errors } // là 1 obj
   } = useForm<FormData>({
@@ -30,10 +35,12 @@ function Register() {
     // thực hiện call data
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticate(true)
+        setProfile(data.data.data.user)
+        navigate('/')
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<SuccessResponse<Omit<FormData, 'confirm_password'>>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data
           if (formError?.email) {
             setError('email', {
@@ -91,12 +98,14 @@ function Register() {
                 />
                 <div className='mt-1 min-h-[1.25rem] text-sm text-red-600 '>{errors.email?.message}</div> */}
                 <div className='mt-3'>
-                  <button
+                  <Button
                     type='submit'
+                    isLoading={registerAccountMutation.isLoading}
+                    disabled={registerAccountMutation.isLoading}
                     className='flex w-full items-center justify-center bg-red-500 py-4 px-2 text-sm uppercase text-white hover:bg-red-600'
                   >
                     Đăng ký
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>
