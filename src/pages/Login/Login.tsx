@@ -11,6 +11,7 @@ import { ErrorResponse } from 'src/type/utils.type'
 import { useForm } from 'react-hook-form'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
+import { User } from 'src/type/user.type'
 
 type FormData = Omit<Schema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password']) // set up schema trừ confirm_pass
@@ -34,7 +35,7 @@ function Login() {
   const onSubmit = handleSubmit((data) => {
     // thực hiện call data
     loginAccountMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: (data: { data: { data: { user: React.SetStateAction<User | null> } } }) => {
         setIsAuthenticate(true)
         setProfile(data.data.data.user)
         navigate('/')
