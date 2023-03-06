@@ -60,7 +60,7 @@ function Pagination({ queryConfig, pageSize }: Props) {
               }).toString()
             }}
             key={index}
-            className={classNames('mx-2 cursor-pointer rounded bg-white px-3 py-2 shadow-sm', {
+            className={classNames('mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm', {
               'border-cyan-500': pageNumber === page,
               'border-trasparent': pageNumber !== page
             })}
@@ -73,7 +73,7 @@ function Pagination({ queryConfig, pageSize }: Props) {
   return (
     <div className='mt-6 flex  flex-wrap justify-center'>
       {page === 1 ? (
-        <span className='shadown-sm mx-2 cursor-not-allowed rounded bg-white/60 px-3 py-2'>Prev</span>
+        <span className='shadown-sm mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2'>Prev</span>
       ) : (
         <Link
           to={{
@@ -83,14 +83,14 @@ function Pagination({ queryConfig, pageSize }: Props) {
               page: (page - 1).toString()
             }).toString()
           }}
-          className='shadown-sm mx-2 cursor-pointer rounded bg-white px-3 py-2'
+          className='shadown-sm mx-2 cursor-pointer rounded border bg-white px-3 py-2'
         >
           Prev
         </Link>
       )}
       {renderPagination()}
       {page === pageSize ? (
-        <span className='shadown-sm mx-2 cursor-not-allowed rounded bg-white/60 px-3 py-2'>Next</span>
+        <span className='shadown-sm mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2'>Next</span>
       ) : (
         <Link
           to={{
@@ -100,7 +100,7 @@ function Pagination({ queryConfig, pageSize }: Props) {
               page: (page + 1).toString()
             }).toString()
           }}
-          className='shadown-sm mx-2 cursor-pointer rounded bg-white px-3 py-2'
+          className='shadown-sm mx-2 cursor-pointer rounded border bg-white px-3 py-2'
         >
           Next
         </Link>
