@@ -12,7 +12,6 @@ function ProductRating({ rating }: { rating: number }) {
   }
   return (
     <>
-      {' '}
       <div className='flex items-center'>
         {Array(5)
           .fill(0)
