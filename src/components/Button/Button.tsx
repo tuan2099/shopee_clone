@@ -5,6 +5,7 @@ interface buttonType extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 function Button(props: buttonType) {
   const { isLoading, className, disabled, children, ...rest } = props
+
   const newClassName = disabled ? className + 'cursor-not-allowed' : className
   return (
     <>

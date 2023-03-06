@@ -86,7 +86,7 @@ function AssideFilter() {
             </Button>
           </form>
         </div>
-        <div className='my-4 h-[1px] bg-gray-300'>
+        <div className='my-4 '>
           <div>Đánh giá</div>
           <ul className='my-3'>
             <li className='py-1 pl-2'>
