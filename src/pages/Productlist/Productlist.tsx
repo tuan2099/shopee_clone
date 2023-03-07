@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
 import { omitBy, isUndefined } from 'lodash'
 import productApi from 'src/apis/product.api'
 import Pagination from 'src/components/Pagination'
@@ -8,7 +7,6 @@ import { ProductListConfig } from 'src/type/product.type'
 import AssideFilter from './AssideFilter'
 import Product from './Product/Product'
 import SourceProductList from './sourceProductList'
-import { useEffect } from 'react'
 
 export type queryConfig = {
   // pagination
@@ -21,7 +19,7 @@ function ProductList() {
     {
       // pagination
       page: queryParam.page || '1',
-      limit: queryParam.limit,
+      limit: queryParam.limit || '20',
       sort_by: queryParam.sort_by,
       exclude: queryParam.exclude,
       name: queryParam.name,
@@ -49,7 +47,7 @@ function ProductList() {
               <AssideFilter />
             </div>
             <div className='col-span-9'>
-              <SourceProductList queryConfig={queryConfig} pageSize={data?.data.data.pagination.page_size}/>
+              <SourceProductList queryConfig={queryConfig} pageSize={data?.data.data.pagination.page_size} />
               <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {/* {Array(30)
                 .fill(0)
