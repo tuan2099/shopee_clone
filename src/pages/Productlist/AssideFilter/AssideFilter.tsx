@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
+import InputNumber from 'src/components/InputNumber'
 
 function AssideFilter() {
   return (
@@ -65,7 +66,7 @@ function AssideFilter() {
           <div>Khoảng giá</div>
           <form className='mt-2'>
             <div className='flex items-start'>
-              <Input
+              <InputNumber
                 type='text'
                 className='grow'
                 name='from'
@@ -73,7 +74,7 @@ function AssideFilter() {
                 classNameinput='px-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
               />
               <div className='mx-2 mt-2 shrink-0'>-</div>
-              <Input
+              <InputNumber
                 type='text'
                 className='grow'
                 name='from'
