@@ -3,6 +3,7 @@ import React from 'react'
 import { createSearchParams, Link } from 'react-router-dom'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
+import InputNumber from 'src/components/InputNumber'
 import { Categorry } from 'src/type/categorry.type'
 import { queryConfig } from '../Productlist'
 
@@ -87,7 +88,7 @@ function AssideFilter({ categories, queryConfig }: Props) {
           <div>Khoảng giá</div>
           <form className='mt-2'>
             <div className='flex items-start'>
-              <Input
+              <InputNumber
                 type='text'
                 className='grow'
                 name='from'
@@ -95,7 +96,7 @@ function AssideFilter({ categories, queryConfig }: Props) {
                 classNameinput='px-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
               />
               <div className='mx-2 mt-2 shrink-0'>-</div>
-              <Input
+              <InputNumber
                 type='text'
                 className='grow'
                 name='from'
