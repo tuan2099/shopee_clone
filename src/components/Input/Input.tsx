@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react'
 import type { RegisterOptions, UseFormRegister } from 'react-hook-form'
+
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   errorsMesage?: string
   register?: UseFormRegister<any>

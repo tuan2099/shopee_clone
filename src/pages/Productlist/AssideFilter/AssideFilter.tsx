@@ -1,9 +1,18 @@
+import classNames from 'classnames'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { createSearchParams, Link } from 'react-router-dom'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
+import { Categorry } from 'src/type/categorry.type'
+import { queryConfig } from '../Productlist'
 
-function AssideFilter() {
+interface Props {
+  categories: Categorry[]
+  queryConfig: queryConfig
+}
+
+function AssideFilter({ categories, queryConfig }: Props) {
+  const { category } = queryConfig
   return (
     <>
       <div className='py-4'>
@@ -26,19 +35,32 @@ function AssideFilter() {
         </Link>
         <div className='my-4 h-[1px] bg-gray-300' />
         <ul>
-          <li className='py-2 pl-2'>
-            <Link to='/' className='relative px-2 font-semibold text-orange'>
-              <svg viewBox='0 0 4 7' className='absolute top-1 left-[-10px] h-2 w-2 fill-orange'>
-                <polygon points='4 3.5 0 0 0 7' />
-              </svg>
-              Thời trang mua
-            </Link>
-          </li>
-          <li className='py-2 pl-2'>
-            <Link to='/' className='relative px-2 font-semibold text-orange'>
-              Thời trang mua
-            </Link>
-          </li>
+          {categories.map((categoryItem) => {
+            const isActive = category === categoryItem._id
+            return (
+              <li className='py-2 pl-2' key={categoryItem._id}>
+                <Link
+                  to={{
+                    pathname: '/',
+                    search: createSearchParams({
+                      ...queryConfig,
+                      category: categoryItem._id
+                    }).toString()
+                  }}
+                  className={classNames('relative px-2 ', {
+                    'font-semibold text-orange': isActive
+                  })}
+                >
+                  {isActive && (
+                    <svg viewBox='0 0 4 7' className='absolute top-1 left-[-10px] h-2 w-2 fill-orange'>
+                      <polygon points='4 3.5 0 0 0 7' />
+                    </svg>
+                  )}
+                  {categoryItem.name}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
         <Link to='/' className='font-blod mt-4 flex items-center uppercase'>
           <svg

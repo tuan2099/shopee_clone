@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { omitBy, isUndefined } from 'lodash'
+import categoryApi from 'src/apis/categorry.api'
 import productApi from 'src/apis/product.api'
 import Pagination from 'src/components/Pagination'
 import useQueryParams from 'src/hooks/useQueryParam'
@@ -26,28 +27,38 @@ function ProductList() {
       order: queryParam.order,
       price_max: queryParam.price_max,
       price_min: queryParam.price_min,
-      rating_filter: queryParam.rating_filter
+      rating_filter: queryParam.rating_filter,
+      category: queryParam.category
     },
     isUndefined
   )
-  const { data } = useQuery({
+  const { data: ProductData } = useQuery({
+    // đổi tên thành productdataa
     queryKey: ['products', queryConfig], // truyền query param để link động trên url khi thay đổi data
     queryFn: () => {
-      return productApi.getProducts(queryConfig as ProductListConfig) // ép kiể
+      return productApi.getProducts(queryConfig as ProductListConfig) // ép kiểu
     },
     keepPreviousData: true
+  })
+
+  const { data: categoryData } = useQuery({
+    // đổi tên thành productdataa
+    queryKey: ['categories'],
+    queryFn: () => {
+      return categoryApi.getCategories()
+    }
   })
 
   return (
     <div className='bg-gray-200 py-6'>
       <div className='container'>
-        {data && (
+        {ProductData && (
           <div className='grid grid-cols-12 gap-6'>
             <div className='col-span-3'>
-              <AssideFilter />
+              <AssideFilter queryConfig={queryConfig} categories={categoryData?.data.data || []} />
             </div>
             <div className='col-span-9'>
-              <SourceProductList queryConfig={queryConfig} pageSize={data?.data.data.pagination.page_size} />
+              <SourceProductList queryConfig={queryConfig} pageSize={ProductData?.data.data.pagination.page_size} />
               <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {/* {Array(30)
                 .fill(0)
@@ -60,7 +71,7 @@ function ProductList() {
                     </>
                   )
                 })} */}
-                {data.data.data.products.map((product) => {
+                {ProductData.data.data.products.map((product) => {
                   return (
                     <div className='col-span-1' key={product._id}>
                       <Product product={product} />
@@ -68,7 +79,7 @@ function ProductList() {
                   )
                 })}
               </div>
-              <Pagination queryConfig={queryConfig} pageSize={data?.data.data.pagination.page_size} />
+              <Pagination queryConfig={queryConfig} pageSize={ProductData?.data.data.pagination.page_size} />
             </div>
           </div>
         )}
