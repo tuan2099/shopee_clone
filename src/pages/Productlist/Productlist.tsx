@@ -5,9 +5,9 @@ import productApi from 'src/apis/product.api'
 import Pagination from 'src/components/Pagination'
 import useQueryParams from 'src/hooks/useQueryParam'
 import { ProductListConfig } from 'src/type/product.type'
-import AssideFilter from './AssideFilter'
-import Product from './Product/Product'
-import SourceProductList from './sourceProductList'
+import AssideFilter from './components/AssideFilter'
+import Product from './components/Product/Product'
+import SourceProductList from './components/sourceProductList'
 
 export type queryConfig = {
   // pagination

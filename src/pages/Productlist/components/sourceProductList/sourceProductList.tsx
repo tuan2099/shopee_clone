@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from 'src/components/Button'
-import { queryConfig } from '../Productlist'
+import { queryConfig } from '../../Productlist'
 import { sortBy, order as orderConstant } from 'src/constant/products'
 import classNames from 'classnames'
 import { ProductListConfig } from 'src/type/product.type'
