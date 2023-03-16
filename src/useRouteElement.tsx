@@ -7,6 +7,7 @@ import MainLayout from './layout/Mainlayout'
 import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
+import ProductDetail from './pages/ProductDetail'
 
 // xử lý đăng nhập vào mới đưuọc làm ....
 function ProtectedRoute() {
@@ -50,6 +51,15 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <ProductList />
+        </MainLayout>
+      )
+    },
+    {
+      path: ':id',
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductDetail />
         </MainLayout>
       )
     },
