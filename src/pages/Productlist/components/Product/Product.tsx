@@ -2,14 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import ProductRating from 'src/components/productRating'
 import { Product as ProductType } from 'src/type/product.type'
-import { formartCurrency, formatNumberToSocialStyle } from 'src/uitils/uitils'
+import { formartCurrency, formatNumberToSocialStyle, generateNameId } from 'src/uitils/uitils'
 interface Props {
   product: ProductType
 }
 function Product({ product }: Props) {
   return (
     <>
-      <Link to={`/${product._id}`}>
+      <Link to={`/${generateNameId({ name: product.name, id: product._id })}`}>
         <div className='transtion-transform overflow-hidden rounded-sm bg-white shadow duration-100 hover:translate-y-[-0.0625rem] hover:shadow-md'>
           <div className='relative w-full pt-[100%]'>
             <img
@@ -31,7 +31,7 @@ function Product({ product }: Props) {
               </div>
             </div>
             <div className='mt-3 flex items-center justify-end'>
-              <ProductRating rating={product.rating} />
+              <ProductRating rating={product.rating} activeClassname={''} noneActiveClassName={''} />
               <div className='ml-2 text-sm'>
                 <span>{formatNumberToSocialStyle(product.sold)}</span>
                 <span className='ml-1'>Đã bán</span>

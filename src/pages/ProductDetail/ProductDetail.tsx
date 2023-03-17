@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import InputNumber from 'src/components/InputNumber'
 import ProductRating from 'src/components/productRating'
-import { formartCurrency, formatNumberToSocialStyle, rateSale } from 'src/uitils/uitils'
+import { formartCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/uitils/uitils'
 import DOMPurify from 'dompurify'
 import { Product } from 'src/type/product.type'
 
 function ProductDetail() {
-  const { id } = useParams()
+  const { nameId } = useParams()
+  const id = getIdFromNameId(nameId as string)
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5])
   const [hoverActiveImage, setHoverAcctiveImage] = useState('')
+  const iamgeRef = useRef<HTMLImageElement>(null) // hover zoom
   // call api product detail
   const { data: productDetailData } = useQuery({
     queryKey: ['product', id],
@@ -44,6 +46,10 @@ function ProductDetail() {
       setCurrentIndexImage((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
+  // const handleZoom = (event: any) => {
+  //  const image =  iamgeRef.current as HTMLImageElement
+  //  image.style.width =
+  // }
   if (!product) return null
 
   return (
@@ -57,6 +63,7 @@ function ProductDetail() {
                   src={hoverActiveImage}
                   alt={product.name}
                   className='absolute top-0 left-0 h-full bg-white object-cover'
+                  ref={iamgeRef}
                 />
               </div>
               <div className='relative mt-4 grid grid-cols-5 gap-1'>
