@@ -98,7 +98,8 @@ export const schema = yup.object({
       }
       return price_min !== '' || price_max !== ''
     }
-  })
+  }),
+  name: yup.string().trim().required('Vui lòng nhập teen sản phẩm')
 })
 
 export type Schema = yup.InferType<typeof schema> // kế thừa schema -> ko cần khái báo interface

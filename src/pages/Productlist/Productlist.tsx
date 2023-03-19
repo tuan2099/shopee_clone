@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { omitBy, isUndefined } from 'lodash'
 import categoryApi from 'src/apis/categorry.api'
 import productApi from 'src/apis/product.api'
 import Pagination from 'src/components/Pagination'
-import useQueryParams from 'src/hooks/useQueryParam'
+import useQueryConffig from 'src/hooks/useQueryConffig'
 import { ProductListConfig } from 'src/type/product.type'
 import AssideFilter from './components/AssideFilter'
 import Product from './components/Product/Product'
@@ -15,30 +14,16 @@ export type queryConfig = {
 }
 
 function ProductList() {
-  const queryParam = useQueryParams()
-  const queryConfig: queryConfig = omitBy(
-    {
-      // pagination
-      page: queryParam.page || '1',
-      limit: queryParam.limit || '20',
-      sort_by: queryParam.sort_by,
-      exclude: queryParam.exclude,
-      name: queryParam.name,
-      order: queryParam.order,
-      price_max: queryParam.price_max,
-      price_min: queryParam.price_min,
-      rating_filter: queryParam.rating_filter,
-      category: queryParam.category
-    },
-    isUndefined
-  )
+  const queryConfig = useQueryConffig()
+
   const { data: ProductData } = useQuery({
     // đổi tên thành productdataa
     queryKey: ['products', queryConfig], // truyền query param để link động trên url khi thay đổi data
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig) // ép kiểu
     },
-    keepPreviousData: true
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000 // lấy data cũ để ko phải gọi lại nữa
   })
 
   const { data: categoryData } = useQuery({

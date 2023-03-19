@@ -6,9 +6,13 @@ import InputNumber from 'src/components/InputNumber'
 import ProductRating from 'src/components/productRating'
 import { formartCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/uitils/uitils'
 import DOMPurify from 'dompurify'
-import { Product } from 'src/type/product.type'
+import { Product as ProductType, ProductListConfig } from 'src/type/product.type'
+import { QueryConfig } from 'src/hooks/useQueryConffig'
+import Product from '../Productlist/components/Product'
+import QuantityController from 'src/components/QuantityController'
 
 function ProductDetail() {
+  const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5])
@@ -24,7 +28,18 @@ function ProductDetail() {
     () => (product ? product.images.slice(...currentIndexImage) : []),
     [product, currentIndexImage]
   ) // slide product
+  const queryConfig = { limit: '20', page: '1', category: product?.category._id }
 
+  const { data: ProductData } = useQuery({
+    // đổi tên thành productdataa
+    queryKey: ['products', queryConfig], // truyền query param để link động trên url khi thay đổi data
+    queryFn: () => {
+      return productApi.getProducts(queryConfig as ProductListConfig) // ép kiểu
+    },
+    enabled: Boolean(product),
+    staleTime: 3 * 60 * 1000 // lấy data cũ để ko phải gọi lại nữa
+  })
+  console.log(ProductData)
   useEffect(() => {
     if (product && product.images.length > 0) {
       // có data và ko under file
@@ -37,7 +52,7 @@ function ProductDetail() {
     setHoverAcctiveImage(img)
   }
   const buttonNextSlider = () => {
-    if (currentIndexImage[1] < (product as Product).images.length) {
+    if (currentIndexImage[1] < (product as ProductType).images.length) {
       setCurrentIndexImage((prev) => [prev[0] + 1, prev[1] + 1])
     }
   }
@@ -50,6 +65,10 @@ function ProductDetail() {
   //  const image =  iamgeRef.current as HTMLImageElement
   //  image.style.width =
   // }
+
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value)
+  }
   if (!product) return null
 
   return (
@@ -138,38 +157,13 @@ function ProductDetail() {
               </div>
               <div className='mt-8 flex items-center'>
                 <div className='capitalize text-gray-500'>Số lượng</div>
-                <div className='ml-10 flex items-center'>
-                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='h-4 w-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 12h-15' />
-                    </svg>
-                  </button>
-                  <InputNumber
-                    value={1}
-                    className=''
-                    classNameError='hidden'
-                    classNameinput='h-8 w-14 border-t border-b border-gray-300 text-center outline-none'
-                  />
-                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='h-4 w-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
-                    </svg>
-                  </button>
-                </div>
+                <QuantityController
+                  onDecrese={handleBuyCount}
+                  onIncrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  value={buyCount}
+                  max={product.quantity}
+                />
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
@@ -209,6 +203,21 @@ function ProductDetail() {
                 }}
               />
             </div>
+          </div>
+        </div>
+        <div className='mt-8'>
+          <div className='container'>
+            {ProductData && (
+              <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                {ProductData.data.data.products.map((product) => {
+                  return (
+                    <div className='col-span-1' key={product._id}>
+                      <Product product={product} />
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
