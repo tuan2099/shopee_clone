@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
@@ -39,10 +39,10 @@ function ProductDetail() {
     enabled: Boolean(product),
     staleTime: 3 * 60 * 1000 // lấy data cũ để ko phải gọi lại nữa
   })
-  console.log(ProductData)
+
   useEffect(() => {
     if (product && product.images.length > 0) {
-      // có data và ko under file
+      // có data và ko underfile
       setHoverAcctiveImage(product.images[0])
     }
   }, [product])
@@ -61,6 +61,7 @@ function ProductDetail() {
       setCurrentIndexImage((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
+  // const addToCartMutation = useMutation(pur)
   // const handleZoom = (event: any) => {
   //  const image =  iamgeRef.current as HTMLImageElement
   //  image.style.width =
