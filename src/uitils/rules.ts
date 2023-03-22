@@ -3,9 +3,16 @@ import { type } from 'os'
 // import { yupResolver } from '@hookform/resolvers'
 import * as yup from 'yup'
 import type { RegisterOptions, UseFormGetValues } from 'react-hook-form/dist/types'
+import { AnyObject } from 'yup/lib/types'
 
 type Rules = { [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions }
-
+function testPriceMinMax(this: yup.TestContext<AnyObject>) {
+  const { price_max, price_min } = this.parent as { price_min: string; price_max: string }
+  if (price_min !== '' && price_max !== '') {
+    return Number(price_max) >= Number(price_min)
+  }
+  return price_min !== '' || price_max !== ''
+}
 export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
@@ -78,26 +85,12 @@ export const schema = yup.object({
   price_min: yup.string().test({
     name: 'price-not-allowed',
     message: 'Giá ko phù hợp',
-    test: function (value) {
-      const price_min = value
-      const { price_max } = this.parent as { price_min: string; price_max: string }
-      if (price_min !== '' && price_max !== '') {
-        return Number(price_max) >= Number(price_min)
-      }
-      return price_min !== '' || price_max !== ''
-    }
+    test: testPriceMinMax
   }),
   price_max: yup.string().test({
     name: 'price-not-allowed',
     message: 'Giá ko phù hợp',
-    test: function (value) {
-      const price_max = value
-      const { price_min } = this.parent as { price_min: string; price_max: string }
-      if (price_min !== '' && price_max !== '') {
-        return Number(price_max) >= Number(price_min)
-      }
-      return price_min !== '' || price_max !== ''
-    }
+    test: testPriceMinMax
   }),
   name: yup.string().trim().required('Vui lòng nhập teen sản phẩm')
 })

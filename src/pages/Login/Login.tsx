@@ -13,8 +13,8 @@ import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 import { User } from 'src/type/user.type'
 
-type FormData = Omit<Schema, 'confirm_password'>
-const loginSchema = schema.omit(['confirm_password']) // set up schema trừ confirm_pass
+type FormData = Pick<Schema, 'email' | 'password'>
+const loginSchema = schema.pick(['email', 'password']) // set up schema trừ confirm_pass
 
 function Login() {
   const { setIsAuthenticate, setProfile } = useContext(AppContext) // lấy ra từ context api
