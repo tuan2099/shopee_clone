@@ -6,12 +6,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { omit } from 'lodash'
-import { isAxiosError, isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
+import { isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
 import { ErrorResponse } from 'src/type/utils.type'
 import Button from 'src/components/Button'
 import { AppContext } from 'src/contexts/app.context'
 import { useNavigate } from 'react-router-dom'
-type FormData = Schema
+
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
+const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
 
 function Register() {
   const { setIsAuthenticate, setProfile } = useContext(AppContext) // lấy ra từ context api
@@ -23,7 +25,7 @@ function Register() {
     setError, // get lỗi
     formState: { errors } // là 1 obj
   } = useForm<FormData>({
-    resolver: yupResolver(schema) // dùng yup
+    resolver: yupResolver(registerSchema) // dùng yup
   })
   // react query call api register
   const registerAccountMutation = useMutation({

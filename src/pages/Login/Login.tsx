@@ -5,8 +5,7 @@ import { Schema, schema } from 'src/uitils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
-import { omit } from 'lodash'
-import { isAxiosError, isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
+import { isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
 import { ErrorResponse } from 'src/type/utils.type'
 import { useForm } from 'react-hook-form'
 import { AppContext } from 'src/contexts/app.context'
@@ -14,7 +13,7 @@ import Button from 'src/components/Button'
 import { User } from 'src/type/user.type'
 
 type FormData = Pick<Schema, 'email' | 'password'>
-const loginSchema = schema.pick(['email', 'password']) // set up schema trừ confirm_pass
+const loginSchema = schema.pick(['email', 'password'])
 
 function Login() {
   const { setIsAuthenticate, setProfile } = useContext(AppContext) // lấy ra từ context api

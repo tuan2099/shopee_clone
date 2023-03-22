@@ -1,17 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { omit } from 'lodash'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { createSearchParams, Link, useNavigate } from 'react-router-dom'
+import { formartCurrency } from 'src/uitils/uitils'
 import authApi from 'src/apis/auth.api'
+import { PurchaseStatus } from 'src/constant/purchases'
 import { AppContext } from 'src/contexts/app.context'
 import useQueryConffig from 'src/hooks/useQueryConffig'
 import { schema, Schema } from 'src/uitils/rules'
 import Popover from '../Popover'
+import purchasesApi from 'src/apis/purchase.api'
+import noProductIncart from 'src/assets/images/no-product-in-cart.png'
 
 type FormData = Pick<Schema, 'name'>
 const nameSchema = schema.pick(['name'])
+
+const MAX_PURCHASES = 5
+
 function Header() {
   const navigate = useNavigate()
   const queryConfig = useQueryConffig()
@@ -30,9 +37,19 @@ function Header() {
       setProfile(null)
     }
   })
+  // call api cart
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: PurchaseStatus.inCart }],
+    queryFn: () => purchasesApi.getPurchases({ status: PurchaseStatus.inCart }),
+    enabled: isAuthenticated // chỉ kích hoạt khi đăng nhập
+  })
+
+  const purchasesInCart = purchasesInCartData?.data.data
+  // logout button
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+
   const onSubmitSearch = handleSubmit((data) => {
     const config = queryConfig.order
       ? omit(
@@ -52,6 +69,7 @@ function Header() {
       search: createSearchParams(config).toString()
     })
   })
+
   return (
     <>
       <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
@@ -187,32 +205,52 @@ function Header() {
               placement='bottom-end'
               renderPopover={
                 <div className='relative w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                  <div className='p-2'>
-                    <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
-                    <div className='mt-5'>
-                      <div className='mt-2 flex py-2 hover:bg-gray-100'>
-                        <div className='flex-shrink-0'>
-                          <img src='' alt='' className='h-11 w-11 object-cover' />
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
+                    <div className='p-2'>
+                      <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                      <div className='mt-5'>
+                        {purchasesInCart.slice(0, MAX_PURCHASES).map((purchase) => (
+                          <div key={purchase._id} className='mt-2 flex py-2 hover:bg-gray-100'>
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={purchase.product.image}
+                                alt={purchase.product.name}
+                                className='h-11 w-11 object-cover'
+                              />
+                            </div>
+                            <div className='ml-2 flex-grow overflow-hidden'>
+                              <div className='overflow-hiden truncate'>{purchase.product.name}</div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <span className='text-orange'>₫{formartCurrency(purchase.product.price)}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className='mt-6 flex items-center justify-between'>
+                        <div className='text-xs capitalize text-gray-500'>
+                          {' '}
+                          {purchasesInCart.length > MAX_PURCHASES ? purchasesInCart.length - MAX_PURCHASES : ''} Thêm
+                          hàng vào giỏ
                         </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='overflow-hiden truncate'>Tên sản phẩm</div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>đ500.000</span>
-                        </div>
+                        <Link
+                          to='/cart'
+                          className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'
+                        >
+                          Xem giỏ hàng
+                        </Link>
                       </div>
                     </div>
-                    <div className='mt-6 flex items-center justify-between'>
-                      <div className='text-xs capitalize text-gray-500'>Thêm hàng vào giỏ</div>
-                      <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'>
-                        Xem giỏ hàng
-                      </button>
+                  ) : (
+                    <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
+                      <img src={noProductIncart} alt='no purchase' className='h-24 w-24' />
+                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
                     </div>
-                  </div>
+                  )}
                 </div>
               }
             >
-              <Link to='/'>
+              <Link to='/' className='relative'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
@@ -227,6 +265,11 @@ function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
+                {purchasesInCart && purchasesInCart.length > 0 && (
+                  <span className='absolute top-[-5px] left-[17px] rounded-full bg-white px-[9px] py-[1px] text-xs text-orange'>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
             {/* Cart */}

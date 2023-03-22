@@ -2,15 +2,15 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
-import InputNumber from 'src/components/InputNumber'
 import ProductRating from 'src/components/productRating'
 import { formartCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/uitils/uitils'
 import DOMPurify from 'dompurify'
 import { Product as ProductType, ProductListConfig } from 'src/type/product.type'
-import { QueryConfig } from 'src/hooks/useQueryConffig'
 import Product from '../Productlist/components/Product'
 import QuantityController from 'src/components/QuantityController'
 import purchasesApi from 'src/apis/purchase.api'
+import { queryClient } from 'src/main'
+import { PurchaseStatus } from 'src/constant/purchases'
 
 function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
@@ -75,7 +75,15 @@ function ProductDetail() {
   }
   const addToCart = () => {
     // truyền vào do thằng id có thể underfine nên phải ép sang string
-    addToCartMutation.mutate({ buy_count: buyCount, product_id: product?._id as string })
+    addToCartMutation.mutate(
+      { buy_count: buyCount, product_id: product?._id as string },
+      {
+        // add xong cập nhật
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: PurchaseStatus.inCart }] })
+        }
+      }
+    )
   }
   if (!product) return null
 
