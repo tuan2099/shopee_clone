@@ -10,6 +10,7 @@ import { Product as ProductType, ProductListConfig } from 'src/type/product.type
 import { QueryConfig } from 'src/hooks/useQueryConffig'
 import Product from '../Productlist/components/Product'
 import QuantityController from 'src/components/QuantityController'
+import purchasesApi from 'src/apis/purchase.api'
 
 function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
@@ -61,7 +62,9 @@ function ProductDetail() {
       setCurrentIndexImage((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
-  // const addToCartMutation = useMutation(pur)
+  // api addtocard
+  const addToCartMutation = useMutation(purchasesApi.addToCard)
+
   // const handleZoom = (event: any) => {
   //  const image =  iamgeRef.current as HTMLImageElement
   //  image.style.width =
@@ -69,6 +72,10 @@ function ProductDetail() {
 
   const handleBuyCount = (value: number) => {
     setBuyCount(value)
+  }
+  const addToCart = () => {
+    // truyền vào do thằng id có thể underfine nên phải ép sang string
+    addToCartMutation.mutate({ buy_count: buyCount, product_id: product?._id as string })
   }
   if (!product) return null
 
@@ -168,7 +175,10 @@ function ProductDetail() {
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
-                <button className='hover:bg-orange-5 flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm'>
+                <button
+                  onClick={addToCart}
+                  className='hover:bg-orange-5 flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm'
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
