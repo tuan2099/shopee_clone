@@ -229,7 +229,6 @@ function Header() {
                       </div>
                       <div className='mt-6 flex items-center justify-between'>
                         <div className='text-xs capitalize text-gray-500'>
-                          {' '}
                           {purchasesInCart.length > MAX_PURCHASES ? purchasesInCart.length - MAX_PURCHASES : ''} Thêm
                           hàng vào giỏ
                         </div>

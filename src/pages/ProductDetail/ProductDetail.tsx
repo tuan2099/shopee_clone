@@ -11,6 +11,7 @@ import QuantityController from 'src/components/QuantityController'
 import purchasesApi from 'src/apis/purchase.api'
 import { queryClient } from 'src/main'
 import { PurchaseStatus } from 'src/constant/purchases'
+import { toast } from 'react-toastify'
 
 function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
@@ -79,7 +80,8 @@ function ProductDetail() {
       { buy_count: buyCount, product_id: product?._id as string },
       {
         // add xong cập nhật
-        onSuccess: () => {
+        onSuccess: (data) => {
+          toast.success(data.data.message, { autoClose: 2000 })
           queryClient.invalidateQueries({ queryKey: ['purchases', { status: PurchaseStatus.inCart }] })
         }
       }
