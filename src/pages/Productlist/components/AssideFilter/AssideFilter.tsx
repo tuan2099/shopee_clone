@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import RatingStar from '../Ratingstar/RatingStar'
 import { omit } from 'lodash'
 import { QueryConfig } from 'src/hooks/useQueryConffig'
+import Inputpro from 'src/components/Inputpro'
 interface Props {
   categories: Categorry[]
   queryConfig: QueryConfig
@@ -152,7 +153,7 @@ function AssideFilter({ categories, queryConfig }: Props) {
                   )
                 }}
               />
-
+              {/* <Inputpro control={control} name='price_min' onChange={}/> */}
               <div className='mx-2 mt-2 shrink-0'>-</div>
               <Controller
                 control={control}

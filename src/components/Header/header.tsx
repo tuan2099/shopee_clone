@@ -13,6 +13,7 @@ import { schema, Schema } from 'src/uitils/rules'
 import Popover from '../Popover'
 import purchasesApi from 'src/apis/purchase.api'
 import noProductIncart from 'src/assets/images/no-product-in-cart.png'
+import { queryClient } from 'src/main'
 
 type FormData = Pick<Schema, 'name'>
 const nameSchema = schema.pick(['name'])
@@ -35,6 +36,7 @@ function Header() {
     onSuccess: () => {
       setIsAuthenticate(false)
       setProfile(null)
+      queryClient.removeQueries({ queryKey: ['purchases', { status: PurchaseStatus.inCart }] }) // bỏ query khi logout
     }
   })
   // call api cart
