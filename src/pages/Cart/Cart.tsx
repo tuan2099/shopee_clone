@@ -1,18 +1,34 @@
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import purchasesApi from 'src/apis/purchase.api'
 import Button from 'src/components/Button'
 import QuantityController from 'src/components/QuantityController'
 import { PurchaseStatus } from 'src/constant/purchases'
+import { Purchase } from 'src/type/purchase.type'
 import { formartCurrency, generateNameId } from 'src/uitils/uitils'
 
+interface ExtendedPurchases extends Purchase {
+  disable: boolean
+  checked: boolean
+}
+
 function Cart() {
+  const [extendPurchases, setExtendedPurchases] = useState<ExtendedPurchases[]>([]) // tạo state quản lý checked
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: PurchaseStatus.inCart }],
     queryFn: () => purchasesApi.getPurchases({ status: PurchaseStatus.inCart })
   })
   const purchasesInCart = purchasesInCartData?.data.data
+  useEffect(() => {
+    setExtendedPurchases(
+      purchasesInCart?.map((purchases) => ({
+        ...purchases,
+        disable: false,
+        checked: false
+      })) || []
+    )
+  }, [purchasesInCart])
   return (
     <>
       <div className='bg-neutral-100 px-16'>
@@ -21,8 +37,8 @@ function Cart() {
             <div className='min-w-[1000px]'>
               <div className='grid grid-cols-12 rounded-sm bg-white py-5 px-9 text-sm capitalize text-gray-500 shadow'>
                 <div className='col-span-6'>
-                  <div className='items-center flex'>
-                    <div className='items-center flex flex-shrink-0 justify-center pr-3'>
+                  <div className='flex items-center'>
+                    <div className='flex flex-shrink-0 items-center justify-center pr-3'>
                       <input type='check-box' className='h-5 w-5 accent-orange' />
                     </div>
                     <div className='flex-grow text-black'>Sản phẩm</div>
@@ -38,15 +54,20 @@ function Cart() {
                 </div>
               </div>
               <div className='my-3 rounded-sm bg-white p-5 shadow'>
-                {purchasesInCart?.map((purchase, index) => (
+                {extendPurchases?.map((purchase, index) => (
                   <div
                     key={purchase._id}
                     className='grid grid-cols-12 rounded-sm border border-gray-200 bg-white px-5 px-4 text-center text-sm text-gray-500'
                   >
                     <div className='col-span-6'>
                       <div className='flex'>
-                        <div className='flex-shirk-0 items-center flex justify-center pr-3'>
-                          <input type='checkbox' className='h-5 w-5 accent-orange' />
+                        <div className='flex-shirk-0 flex items-center justify-center pr-3'>
+                          <input
+                            type='checkbox'
+                            className='h-5 w-5 accent-orange'
+                            checked={purchase.checked}
+                            onChange={}
+                          />
                         </div>
                         <div className='flex-grow'>
                           <div className='flex'>
@@ -75,9 +96,9 @@ function Cart() {
                       </div>
                     </div>
                     <div className='col-span-6'>
-                      <div className='items-center grid grid-cols-5'>
+                      <div className='grid grid-cols-5 items-center'>
                         <div className='col-span-2'>
-                          <div className='items-center flex justify-center'>
+                          <div className='flex items-center justify-center'>
                             <span className='text-grau-300 line-through'>
                               đ {formartCurrency(purchase.product.price_before_discount)}{' '}
                             </span>
@@ -105,26 +126,26 @@ function Cart() {
                 ))}
               </div>
               <div className='sticky bottom-0 z-10 mt-8 flex flex-col rounded-sm border border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
-                <div className='items-center flex '>
-                  <div className='items-center flex flex-shrink-0 justify-center pr-3'>
+                <div className='flex items-center '>
+                  <div className='flex flex-shrink-0 items-center justify-center pr-3'>
                     <input type='checkbox' className='h-5 w-5 accent-orange' />
                   </div>
                   <button className='mx-3 border-none bg-none'>Xóa tất cả</button>
                   <button className='mx-3 border-none bg-none'>Xóa</button>
                 </div>
 
-                <div className='items-center ml-auto flex'>
+                <div className='ml-auto flex items-center'>
                   <div>
-                    <div className='items-center flex sm:justify-end'>
+                    <div className='flex items-center sm:justify-end'>
                       <div>Tổng thanh toán (0 sản phẩm)</div>
                       <div className='ml-2 text-2xl text-orange'>1223453</div>
                     </div>
-                    <div className='items-center flex text-sm sm:justify-end'>
+                    <div className='flex items-center text-sm sm:justify-end'>
                       <div className='text-gray-500'>Tiết kiệm</div>
                       <div className='ml-6 text-orange'>1232345</div>
                     </div>
                   </div>
-                  <Button className='items-center mt-5 flex h-10 w-52 justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'>
+                  <Button className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'>
                     Mua hàng
                   </Button>
                 </div>
