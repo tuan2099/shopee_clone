@@ -7,6 +7,7 @@ import QuantityController from 'src/components/QuantityController'
 import { PurchaseStatus } from 'src/constant/purchases'
 import { Purchase } from 'src/type/purchase.type'
 import { formartCurrency, generateNameId } from 'src/uitils/uitils'
+import produce from 'immer'
 
 interface ExtendedPurchases extends Purchase {
   disable: boolean
@@ -15,11 +16,15 @@ interface ExtendedPurchases extends Purchase {
 
 function Cart() {
   const [extendPurchases, setExtendedPurchases] = useState<ExtendedPurchases[]>([]) // tạo state quản lý checked
+
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: PurchaseStatus.inCart }],
     queryFn: () => purchasesApi.getPurchases({ status: PurchaseStatus.inCart })
   })
+
   const purchasesInCart = purchasesInCartData?.data.data
+  const isAllChecked = extendPurchases.every((purchase) => purchase.checked) // kiểm soát all check input check box
+
   useEffect(() => {
     setExtendedPurchases(
       purchasesInCart?.map((purchases) => ({
@@ -29,6 +34,24 @@ function Cart() {
       })) || []
     )
   }, [purchasesInCart])
+  // sử dụng immer.js
+  const handleChecke = (productIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setExtendedPurchases(
+      produce((draft) => {
+        draft[productIndex].checked = event.target.checked
+      })
+    )
+  }
+  const handleCheckAll = () => {
+    setExtendedPurchases((prev) =>
+      prev.map((purchase) => ({
+        ...purchase,
+        checked: !isAllChecked
+        // khji click vào handle check all
+        // mọi item => false
+      }))
+    )
+  }
   return (
     <>
       <div className='bg-neutral-100 px-16'>
@@ -39,7 +62,12 @@ function Cart() {
                 <div className='col-span-6'>
                   <div className='flex items-center'>
                     <div className='flex flex-shrink-0 items-center justify-center pr-3'>
-                      <input type='check-box' className='h-5 w-5 accent-orange' />
+                      <input
+                        type='check-box'
+                        className='h-5 w-5 accent-orange'
+                        checked={isAllChecked}
+                        onChange={handleCheckAll}
+                      />
                     </div>
                     <div className='flex-grow text-black'>Sản phẩm</div>
                   </div>
@@ -66,7 +94,7 @@ function Cart() {
                             type='checkbox'
                             className='h-5 w-5 accent-orange'
                             checked={purchase.checked}
-                            onChange={}
+                            onChange={handleChecke(index)}
                           />
                         </div>
                         <div className='flex-grow'>
@@ -128,9 +156,16 @@ function Cart() {
               <div className='sticky bottom-0 z-10 mt-8 flex flex-col rounded-sm border border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
                 <div className='flex items-center '>
                   <div className='flex flex-shrink-0 items-center justify-center pr-3'>
-                    <input type='checkbox' className='h-5 w-5 accent-orange' />
+                    <input
+                      type='checkbox'
+                      className='h-5 w-5 accent-orange'
+                      checked={isAllChecked}
+                      onChange={handleCheckAll}
+                    />
                   </div>
-                  <button className='mx-3 border-none bg-none'>Xóa tất cả</button>
+                  <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
+                    Chọn tất cả ({extendPurchases.length})
+                  </button>
                   <button className='mx-3 border-none bg-none'>Xóa</button>
                 </div>
 
