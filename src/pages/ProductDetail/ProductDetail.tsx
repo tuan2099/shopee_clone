@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import ProductRating from 'src/components/productRating'
 import { formartCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/uitils/uitils'
@@ -20,6 +20,8 @@ function ProductDetail() {
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5])
   const [hoverActiveImage, setHoverAcctiveImage] = useState('')
   const iamgeRef = useRef<HTMLImageElement>(null) // hover zoom
+  const navigate = useNavigate()
+
   // call api product detail
   const { data: productDetailData } = useQuery({
     queryKey: ['product', id],
@@ -86,6 +88,16 @@ function ProductDetail() {
         }
       }
     )
+  }
+  const buyNow = async () => {
+    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+    const purchase = res.data.data
+    // chuyển state từ trangg này qua trang khác để trang kia nhận state (dữ liệu sản phẩm mua ngay)
+    navigate('/cart', {
+      state: {
+        purchaseId: purchase._id
+      }
+    })
   }
   if (!product) return null
 
@@ -181,6 +193,13 @@ function ProductDetail() {
                   onType={handleBuyCount}
                   value={buyCount}
                   max={product.quantity}
+                  // onForcusOut={(value) =>
+                  //   handleQuantity(
+                  //     index,
+                  //     value,
+                  //     value >= 1 && value <= (purchasesInCart as Purchase[])[index].buy_count
+                  //   )
+                  // }
                 />
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
@@ -205,7 +224,10 @@ function ProductDetail() {
                   </svg>
                   Thêm vào giỏ hàng
                 </button>
-                <button className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none hover:bg-orange/90'>
+                <button
+                  onClick={buyNow}
+                  className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none hover:bg-orange/90'
+                >
                   Mua ngay
                 </button>
               </div>

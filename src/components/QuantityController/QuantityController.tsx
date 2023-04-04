@@ -7,9 +7,19 @@ interface Props extends InputNumberProps {
   onDecrese?: (value: number) => void
   onType?: (value: number) => void
   classnameWrapper?: string
+  onForcusOut: (value: number) => void
 }
 
-function QuantityController({ max, onType, value, onDecrese, onIncrease, classnameWrapper = 'ml-10', ...rest }: Props) {
+function QuantityController({
+  max,
+  onType,
+  value,
+  onDecrese,
+  onIncrease,
+  classnameWrapper = 'ml-10',
+  onForcusOut,
+  ...rest
+}: Props) {
   const [localvalue, setLocavalue] = useState<number>(Number(value) || 0) // local state dùng cho inputnumber
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +51,9 @@ function QuantityController({ max, onType, value, onDecrese, onIncrease, classna
     setLocavalue(_value)
   }
 
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
+    onForcusOut && onForcusOut(Number(event.target.value))
+  }
   return (
     <>
       <div className={'flex items-center' + classnameWrapper}>
@@ -66,6 +79,7 @@ function QuantityController({ max, onType, value, onDecrese, onIncrease, classna
           classNameError='hidden'
           classNameinput='h-8 w-14 border-t border-b border-gray-300 text-center outline-none'
           {...rest}
+          onBlur={handleBlur}
         />
         <button
           onClick={Increase}
