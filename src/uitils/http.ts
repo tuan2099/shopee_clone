@@ -53,6 +53,11 @@ class Http {
           const message = data.message || error.message
           toast.error(message)
         }
+        // check token hết hạn thì xóa khoi local storage và tải lại trang
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          clearAccesTokenFromLocalStorage()
+          // window.location.reload()
+        }
         return Promise.reject(error)
       }
     )

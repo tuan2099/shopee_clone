@@ -3,12 +3,12 @@ import Popover from '../Popover'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
-import { useMutation } from '@tanstack/react-query'
-import { queryClient } from 'src/main'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { PurchaseStatus } from 'src/constant/purchases'
 
 function NavHeader() {
+  const queryClient = useQueryClient()
   // lout out
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
