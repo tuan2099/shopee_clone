@@ -135,8 +135,8 @@ function Profile() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      let avatarName = avatar
       if (file) {
-        let avatarName = avatar
         const form = new FormData() // tạo form data của js có sẵn
         form.append('image', file)
         const upLoadRes = await uploadFileMutation.mutateAsync(form)
@@ -146,9 +146,7 @@ function Profile() {
       const res = await updateProfileMutation.mutateAsync({
         ...data,
         date_of_birth: data.date_of_birth?.toISOString(),
-        roles: [],
-        createdAt: '',
-        updatedAt: ''
+        avatar: avatarName
       })
       setProfile(res.data.data)
       setProfileToLS(res.data.data) // do lấy data từ local stỏage -> phải cập nhật

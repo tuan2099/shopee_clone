@@ -7,7 +7,7 @@ interface Props extends InputNumberProps {
   onDecrese?: (value: number) => void
   onType?: (value: number) => void
   classnameWrapper?: string
-  onForcusOut: (value: number) => void
+  onForcusOut?: (value: number) => void
 }
 
 function QuantityController({
