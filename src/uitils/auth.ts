@@ -16,11 +16,11 @@ export const clearAccesTokenFromLocalStorage = () => {
 
 export const getAccesToken = () => localStorage.getItem('access_token') || ''
 
-export const getProfile = () => {
+export const getProfileFromLS = () => {
   const result = localStorage.getItem('profile')
   return result ? JSON.parse(result) : null
 }
 
-export const setProfile = (profile: User) => {
+export const setProfileToLS = (profile: User) => {
   localStorage.setItem('profile', JSON.stringify(profile))
 }

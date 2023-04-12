@@ -15,8 +15,8 @@ function Input({
   name,
   register,
   rules,
-  classNameError = 'mt-1 min-h-[1.25rem] text-sm text-red-600',
-  classNameinput = 'w-full rounded-sm border border-gray-300 p-3 focus:border-gray-500 focus:shadow-sm',
+  classNameError = 'mt-1 text-red-600 min-h-[1.25rem] text-sm',
+  classNameinput = 'p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm',
   ...rest // những props có sẵn trong thằng input
 }: Props) {
   const registerResult = register && name ? register(name, rules) : {}

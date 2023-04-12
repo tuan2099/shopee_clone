@@ -67,6 +67,7 @@ function Cart() {
       })
     }
   })
+
   useEffect(() => {
     setExtendedPurchases((prev) => {
       const extendedPurchasesObj = keyBy(prev, '_id')

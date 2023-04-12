@@ -17,7 +17,7 @@ const purchasesApi = {
   },
   // là 1 mảng các obj
   buyProduct(body: { product_id: string; buy_count: number }[]) {
-    return http.post<SuccessResponse<Purchase[]>>(`${URL}/buy_products`, body)
+    return http.post<SuccessResponse<Purchase[]>>(`${URL}/buy-products`, body)
   },
   updatePurchases(body: { product_id: string; buy_count: number }) {
     return http.put<SuccessResponse<Purchase>>(`${URL}/update-purchase`, body)

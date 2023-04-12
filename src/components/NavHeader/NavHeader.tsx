@@ -6,6 +6,7 @@ import { AppContext } from 'src/contexts/app.context'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { PurchaseStatus } from 'src/constant/purchases'
+import { getAvatarURL } from 'src/uitils/uitils'
 
 function NavHeader() {
   const queryClient = useQueryClient()
@@ -88,7 +89,7 @@ function NavHeader() {
           >
             <div className='h-6 w-6 flex-shrink-0'>
               <img
-                src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                src={getAvatarURL(profile?.avatar)}
                 alt='userImage'
                 className='h-full w-full rounded-full object-cover'
               />

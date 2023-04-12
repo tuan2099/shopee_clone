@@ -1,14 +1,9 @@
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useQuery } from '@tanstack/react-query'
-import { omit } from 'lodash'
 import { useContext } from 'react'
-import { useForm } from 'react-hook-form'
-import { createSearchParams, Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { formartCurrency } from 'src/uitils/uitils'
 import { PurchaseStatus } from 'src/constant/purchases'
 import { AppContext } from 'src/contexts/app.context'
-import useQueryConffig from 'src/hooks/useQueryConffig'
-import { schema, Schema } from 'src/uitils/rules'
 import purchasesApi from 'src/apis/purchase.api'
 import noProductIncart from 'src/assets/images/no-product-in-cart.png'
 import NavHeader from '../NavHeader'
@@ -17,7 +12,7 @@ import useSearchProducts from 'src/hooks/useSearchProducts'
 
 const MAX_PURCHASES = 5
 function Header() {
-  const { isAuthenticated } = useContext(AppContext)
+  const { isAuthenticated, profile } = useContext(AppContext)
   const { onSubmitSearch, register } = useSearchProducts() // custom hook
   // call api cart
   const { data: purchasesInCartData } = useQuery({

@@ -1,6 +1,6 @@
 import React from 'react'
-import Footer from 'src/components/footer'
 import Header from 'src/components/Header'
+import Footer from 'src/components/footer'
 
 interface Props {
   children?: React.ReactNode // khai báo props children layout

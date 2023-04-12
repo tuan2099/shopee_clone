@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react'
 import { ExtendedPurchases } from 'src/type/purchase.type'
 import { User } from 'src/type/user.type'
-import { getAccesToken, getProfile } from 'src/uitils/auth'
+import { getAccesToken, getProfileFromLS } from 'src/uitils/auth'
 
 // khai báp type
 interface AppContextInterface {
@@ -18,7 +18,7 @@ const initialAppContext: AppContextInterface = {
   // giá trị khởi tạo
   isAuthenticated: Boolean(getAccesToken()),
   setIsAuthenticate: () => null,
-  profile: getProfile(),
+  profile: getProfileFromLS(),
   setProfile: () => null,
   extendPurchases: [],
   setExtendedPurchases: () => null,

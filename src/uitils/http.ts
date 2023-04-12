@@ -1,7 +1,8 @@
 import axios, { AxiosError, HttpStatusCode, type AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { AuthResponse } from 'src/type/auth.type'
-import { clearAccesTokenFromLocalStorage, getAccesToken, saveAccesTokenToLocalStorage, setProfile } from './auth'
+import { clearAccesTokenFromLocalStorage, getAccesToken, saveAccesTokenToLocalStorage, setProfileToLS } from './auth'
+import config from 'src/constant/config'
 
 class Http {
   // bản chất lưu trên ram
@@ -10,7 +11,7 @@ class Http {
   constructor() {
     this.accessToken = getAccesToken() // lấy trong localstorage sẽ bị chậm,
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com/',
+      baseURL: config.baseURL,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
@@ -39,7 +40,7 @@ class Http {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token // bằng giá trị access token lấy ra từ response
           saveAccesTokenToLocalStorage(this.accessToken)
-          setProfile(data.data.user)
+          setProfileToLS(data.data.user)
         } else if (url === 'logout') {
           this.accessToken = ''
           clearAccesTokenFromLocalStorage()
@@ -50,7 +51,7 @@ class Http {
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
-          const message = data.message || error.message
+          const message = data?.message || error.message
           toast.error(message)
         }
         // check token hết hạn thì xóa khoi local storage và tải lại trang
