@@ -1,19 +1,21 @@
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import RegisterLayout from './layout/registerLayout'
-import Login from './pages/Login'
-import ProductList from './pages/Productlist/Productlist'
-import Register from './pages/Register'
 import MainLayout from './layout/Mainlayout'
-import { useContext } from 'react'
+import { useContext, lazy, Suspense } from 'react'
 import { AppContext } from './contexts/app.context'
-import ProductDetail from './pages/ProductDetail'
-import Cart from './pages/Cart'
 import CartLayout from './layout/CartLayout'
-import UserLayout from './pages/User/Layouts/UserLayout'
-import HistoryPurchase from './pages/User/Pages/HIstoryPurchase'
-import ChangePassword from './pages/User/Pages/ChangePassword'
-import Profile from './pages/User/Pages/Profile'
-import NotFound from './pages/NotFound'
+
+// import lazy load page
+const Login = lazy(() => import('./pages/Login'))
+const ProductList = lazy(() => import('./pages/Productlist'))
+const Register = lazy(() => import('./pages/Register'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Cart = lazy(() => import('./pages/Cart'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const UserLayout = lazy(() => import('./pages/User/Layouts/UserLayout'))
+const HistoryPurchase = lazy(() => import('./pages/User/Pages/HIstoryPurchase'))
+const ChangePassword = lazy(() => import('./pages/User/Pages/ChangePassword'))
+const Profile = lazy(() => import('./pages/User/Pages/Profile'))
 
 // xử lý đăng nhập vào mới đưuọc làm ....
 function ProtectedRoute() {
@@ -37,7 +39,9 @@ export default function useRouteElement() {
           path: '/login', // login sử dụng registerLayout
           element: (
             <RegisterLayout>
-              <Login />
+              <Suspense>
+                <Login />
+              </Suspense>
             </RegisterLayout>
           )
         },
@@ -45,7 +49,9 @@ export default function useRouteElement() {
           path: '/register', // register sử dụng registerLayout
           element: (
             <RegisterLayout>
-              <Register />
+              <Suspense>
+                <Register />
+              </Suspense>
             </RegisterLayout>
           )
         }
@@ -56,20 +62,28 @@ export default function useRouteElement() {
       index: true,
       element: (
         <MainLayout>
-          <ProductList />
+          <Suspense>
+            <ProductList />
+          </Suspense>
         </MainLayout>
       )
     },
     {
       path: '*',
-      element: <NotFound />
+      element: (
+        <Suspense>
+          <NotFound />
+        </Suspense>
+      )
     },
     {
       path: ':nameId',
       index: true,
       element: (
         <MainLayout>
-          <ProductDetail />
+          <Suspense>
+            <ProductDetail />
+          </Suspense>
         </MainLayout>
       )
     },
@@ -96,15 +110,27 @@ export default function useRouteElement() {
           children: [
             {
               path: '/user/profile',
-              element: <Profile />
+              element: (
+                <Suspense>
+                  <Profile />
+                </Suspense>
+              )
             },
             {
               path: '/user/purchase',
-              element: <HistoryPurchase />
+              element: (
+                <Suspense>
+                  <HistoryPurchase />
+                </Suspense>
+              )
             },
             {
               path: '/user/password',
-              element: <ChangePassword />
+              element: (
+                <Suspense>
+                  <ChangePassword />
+                </Suspense>
+              )
             }
           ]
         }
