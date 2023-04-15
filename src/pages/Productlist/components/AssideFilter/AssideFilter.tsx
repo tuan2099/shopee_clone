@@ -8,9 +8,9 @@ import { Categorry } from 'src/type/categorry.type'
 import { schema } from 'src/uitils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import RatingStar from '../Ratingstar/RatingStar'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { QueryConfig } from 'src/hooks/useQueryConffig'
-import Inputpro from 'src/components/Inputpro'
+
 interface Props {
   categories: Categorry[]
   queryConfig: QueryConfig

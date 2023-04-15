@@ -5,7 +5,11 @@ import { Schema, schema } from 'src/uitils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
-import { omit } from 'lodash'
+// không có tính năng tree-shaking (dùng gì thì import cái đó ko nên im port hết)
+// import { omit } from 'lodash'
+// không có tree-shaking
+import omit from 'lodash/omit'
+
 import { isAxiosUnprocessableEntityError } from 'src/uitils/uitils'
 import { ErrorResponse } from 'src/type/utils.type'
 import Button from 'src/components/Button'
