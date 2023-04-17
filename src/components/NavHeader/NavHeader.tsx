@@ -85,10 +85,10 @@ function NavHeader() {
             renderPopover={
               <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
                 <div className='flex flex-col py-2 px-3'>
-                  <Link to='/' className='block py-2 px-3 hover:text-orange'>
+                  <Link to='/user' className='block py-2 px-3 hover:text-orange'>
                     Tài khoản của tôi
                   </Link>
-                  <Link to='/' className='block py-2 px-3 hover:text-orange'>
+                  <Link to='/cart' className='block py-2 px-3 hover:text-orange'>
                     Đơn mua
                   </Link>
                   <button onClick={handleLogout} className='py-2 px-3 text-left hover:text-orange'>

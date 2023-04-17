@@ -1,14 +1,29 @@
+import { ErrorResponse } from 'src/type/utils.type'
 import axios, { AxiosError } from 'axios'
 import config from 'src/constant/config'
 import HttpStatusCode from 'src/constant/httpStatusCode.enum' // lấy từ constant
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
+  // eslint-disable-next-line import/no-named-as-default-member
   return axios.isAxiosError(error)
 }
 
 // check lỗi 422
 export function isAxiosUnprocessableEntityError<FormError>(error: unknown): error is AxiosError<FormError> {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.UnprocessableEntity
+}
+
+// check lỗi 401 token
+export function isAxiosUnauthorizedError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized
+}
+
+// check lỗi token hết hạn
+export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
+  return (
+    isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error) &&
+    error.response?.data?.data?.name === 'EXPIRED_TOKEN'
+  )
 }
 
 // format số cho card product
