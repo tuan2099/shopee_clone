@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import RatingStar from '../Ratingstar/RatingStar'
 import omit from 'lodash/omit'
 import { QueryConfig } from 'src/hooks/useQueryConffig'
-
+import { useTranslation } from 'react-i18next'
 interface Props {
   categories: Categorry[]
   queryConfig: QueryConfig
@@ -28,6 +28,7 @@ type FormData = {
 const priceSchema = schema.pick(['price_min', 'price_max'])
 
 function AssideFilter({ categories, queryConfig }: Props) {
+  const { t } = useTranslation()
   const { category } = queryConfig
   // quản lý from trong component
   const {
@@ -77,7 +78,8 @@ function AssideFilter({ categories, queryConfig }: Props) {
               d='M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5'
             />
           </svg>
-          Tất cả danh mục
+          {t('all categories')}
+          {/* Tất cả danh mục */}
         </Link>
         <div className='my-4 h-[1px] bg-gray-300' />
         <ul>
