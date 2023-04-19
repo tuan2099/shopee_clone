@@ -39,7 +39,7 @@ function InputFile({ onChange }: Props) {
       <button
         type='button'
         onClick={handleUpLoad}
-        className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm '
+        className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm'
       >
         Chọn ảnh
       </button>

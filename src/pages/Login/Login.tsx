@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 import { User } from 'src/type/user.type'
+import { Helmet } from 'react-helmet'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
@@ -60,6 +61,10 @@ function Login() {
   })
   return (
     <>
+      <Helmet>
+        <title>Shopee Clone | Đăng Nhập</title>
+        <meta name='description' content='Helmet application' />
+      </Helmet>
       <div className='bg-orange'>
         <div className='container'>
           <div className='grid grid-cols-1 bg-pack-train bg-contain bg-center bg-no-repeat py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>

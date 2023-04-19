@@ -106,7 +106,6 @@ class Http {
           const { url } = config
           // token hết hạn và request đó ko phải là của request refresh token -> mới tiến hành gọi
           if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
-            console.log(123)
             // Hạn chế gọi 2 lần handleRefreshToken
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest

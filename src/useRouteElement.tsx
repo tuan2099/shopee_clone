@@ -17,7 +17,7 @@ const HistoryPurchase = lazy(() => import('./pages/User/Pages/HIstoryPurchase'))
 const ChangePassword = lazy(() => import('./pages/User/Pages/ChangePassword'))
 const Profile = lazy(() => import('./pages/User/Pages/Profile'))
 
-// xử lý đăng nhập vào mới đưuọc làm ....
+// xử lý đăng nhập vào mới được làm ....
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
   return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
@@ -96,7 +96,9 @@ export default function useRouteElement() {
           path: '/cart',
           element: (
             <CartLayout>
-              <Cart />
+              <Suspense>
+                <Cart />
+              </Suspense>
             </CartLayout>
           )
         },
@@ -104,7 +106,9 @@ export default function useRouteElement() {
           path: '/user',
           element: (
             <MainLayout>
-              <UserLayout />
+              <Suspense>
+                <UserLayout />
+              </Suspense>
             </MainLayout>
           ),
           children: [
